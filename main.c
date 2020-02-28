@@ -2,7 +2,7 @@
 #include "LCDFunctions.h"
 #include "delays.h"
 
-
+////////////////////////////////////
 //#define navbuttonport GPIOA;
 //#define navbuttonpin  1;
 //#define selectbuttonport GPIOA;
