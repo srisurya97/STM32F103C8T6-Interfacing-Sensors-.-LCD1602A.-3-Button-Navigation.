@@ -2,7 +2,7 @@
 #include "LCDFunctions.h"
 #include "delays.h"
 
-////////////////////////////////////
+
 //#define navbuttonport GPIOA;
 //#define navbuttonpin  1;
 //#define selectbuttonport GPIOA;
@@ -13,8 +13,14 @@
 
 int i=2; //Default Screen - Home
 int MIN = 1; //Don't Change
-int MAX = 4; //Number of Menus + 1
+int MAX = 5; //Number of Menus + 1
 int Current = 2;
+
+//Menu1 current2 LED ON/OFF
+//Menu2 current3 ADC
+//Menu3 current4 Dummy Menu
+//Menu4 current5 Exit
+//
 
 int main()
 	{
@@ -197,11 +203,47 @@ int main()
 						DelayMs(300);						
 						//LCDClear();
 						LCDSetCursorPosition(0,0);
+						LCDSendString("Dummy Menu       ");
+						LCDSetCursorPosition(0,1);
+						LCDSendString("<<  NAVIGATE  >>");
+						Current = 4;
+						while(i == 4)
+							{
+								//DelayMs(300);
+								if(GPIOA -> IDR & GPIO_IDR_IDR0)
+									{
+										i = i + 1;
+										if(i > MAX) i = MAX;
+									}
+			   
+								if(GPIOA -> IDR & GPIO_IDR_IDR2)
+									{
+										i = i - 1;
+										if(i <= MIN) i = 2;
+									}
+									
+								if(GPIOA -> IDR & GPIO_IDR_IDR1)
+									{
+										
+										
+										
+									}
+									
+						//DelayMs(500);	
+        
+							}
+						}
+							
+        while(i == 5)
+					{
+						DelayMs(300);						
+						//LCDClear();
+						LCDSetCursorPosition(0,0);
 						LCDSendString("EXIT             ");
 						LCDSetCursorPosition(0,1);
 						LCDSendString("<<  NAVIGATE    ");
-						Current = 4;
-						while(i == 4)
+						Current = 5;
+						while(i == 5)
 							{
 								//DelayMs(300);
 								if(GPIOA -> IDR & GPIO_IDR_IDR0)
@@ -219,8 +261,10 @@ int main()
 
 							}
 						}
-							
-			
+
+						
+
+						
 		}
 		
 		
