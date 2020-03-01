@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include "stm32f10x.h"
 #include "delays.h"
+#include "LCDFunctions.h"
+
 
 #define LCDD0PIN 12
 #define LCDD0PORT GPIOB
@@ -51,12 +53,14 @@ uint16_t pinpos[16] = {
 	(0x1C),
 };
 
+///////////////////////////////////////////////////////////////////
 void NotExactDelay(int delay)
 {
 	volatile int i;
 	for(i=0; i < delay; i++);
 }
 
+///////////////////////////////////////////////////////////////////
 void SetPinandPortForOutputPushPull(GPIO_TypeDef *port, int pinnumber)
 	{
 		//Enabling Port Clocks
@@ -79,7 +83,8 @@ void SetPinandPortForOutputPushPull(GPIO_TypeDef *port, int pinnumber)
 					port->CRH &= ~(1<<(pinpos[pinnumber]+2) | 1<<(pinpos[pinnumber]+3));
 				}
 	} 
-	
+
+///////////////////////////////////////////////////////////////////	
 void InitializingPortsForLCD()
 	{
 		SetPinandPortForOutputPushPull(LCDD0PORT, LCDD0PIN);
@@ -96,6 +101,7 @@ void InitializingPortsForLCD()
 		
 	}	
 	
+///////////////////////////////////////////////////////////////////	
 void SendBitToPortandPin(GPIO_TypeDef *port, int pinnumber, uint8_t bitstate)
 	{
 		if(bitstate)
@@ -108,35 +114,39 @@ void SendBitToPortandPin(GPIO_TypeDef *port, int pinnumber, uint8_t bitstate)
 				}
 	}
 	
+///////////////////////////////////////////////////////////////////
 void LCDEnable()
 	{
 		NotExactDelay(DelayBeforeEnable);
 		SendBitToPortandPin(LCDEnablePORT, LCDEnablePIN, 1);
 	}	
 
+///////////////////////////////////////////////////////////////////	
 void LCDSetToWrite()
 	{
 		SendBitToPortandPin(LCDRWPORT, LCDRWPIN, 0);
 	}
 
+///////////////////////////////////////////////////////////////////	
 void LCDSetToRead()
 	{
 		SendBitToPortandPin(LCDRWPORT, LCDRWPIN, 1);
 	}
 
+///////////////////////////////////////////////////////////////////	
 void LCDCommandMode()
 	{
 		SendBitToPortandPin(LCDRSPORT ,LCDRSPIN, 0);
 		//NotExactDelay(10);
 	}
 
+///////////////////////////////////////////////////////////////////	
 void LCDCharacterMode()
 	{
 		SendBitToPortandPin(LCDRSPORT ,LCDRSPIN, 1);
 	}
 
-
-	
+///////////////////////////////////////////////////////////////////	
 void LCDByte(char character)
 	{
 		NotExactDelay(240);
@@ -154,6 +164,7 @@ void LCDByte(char character)
 		NotExactDelay(10);
 	}	
 	
+///////////////////////////////////////////////////////////////////	
 void LCDSendCharacter(char character)
 	{
 		LCDSetToWrite();
@@ -164,7 +175,7 @@ void LCDSendCharacter(char character)
 		//NotExactDelay(190); //200ns
 	}
 
-
+///////////////////////////////////////////////////////////////////
 void LCDSendCommand(char command)
 	{
 		LCDSetToWrite();
@@ -173,12 +184,15 @@ void LCDSendCommand(char command)
 		LCDByte(command);
 		NotExactDelay(190); //200ns
 	}
+	
+///////////////////////////////////////////////////////////////////	
 void LCDClear()
 	{
 		LCDSendCommand(0b00000001); //Clear Display
 		NotExactDelay(8500);
 	}
 
+///////////////////////////////////////////////////////////////////	
 void LCDBegin()
 	{	
 		InitializingPortsForLCD();
@@ -189,9 +203,7 @@ void LCDBegin()
 		LCDClear();
 	}	
 	
-	
-
-	
+///////////////////////////////////////////////////////////////////
 void LCDSendString(char *stringofcharacters)
 {
 	while(*stringofcharacters)
@@ -200,6 +212,7 @@ void LCDSendString(char *stringofcharacters)
 	}
 }	
 	
+///////////////////////////////////////////////////////////////////
 void LCDSendInteger(int Integer ,uint8_t MaxLengthOfString)
 {
 		char StringNumber[MaxLengthOfString];
@@ -207,6 +220,7 @@ void LCDSendInteger(int Integer ,uint8_t MaxLengthOfString)
 		LCDSendString(StringNumber);
 }
 
+///////////////////////////////////////////////////////////////////
 void LCDSendFloat(float floatnumber ,uint8_t MaxLengthOfString)
 {
 		char StringNumber[MaxLengthOfString];
@@ -214,6 +228,7 @@ void LCDSendFloat(float floatnumber ,uint8_t MaxLengthOfString)
 		LCDSendString(StringNumber);
 }
 
+///////////////////////////////////////////////////////////////////
 //    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
 //   64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79
 
@@ -232,6 +247,7 @@ void LCDCursorPositionBitCheck()
 		}
 	}
 
+///////////////////////////////////////////////////////////////////	
 void LCDSetCursorPosition(int X, int Y)
 	{
 		if(X <= 16 && Y <= 1)
@@ -240,7 +256,8 @@ void LCDSetCursorPosition(int X, int Y)
 		}
 	}
 	
-	
+
+
 
 #endif
 
