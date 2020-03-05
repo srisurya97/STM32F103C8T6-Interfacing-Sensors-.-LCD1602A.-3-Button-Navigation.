@@ -1,2 +1,2 @@
-# LCDMenu-Interfacing-with-STM32F103C8T6
-16*2 LCD Menu Interfacing with STM32F103C8T6. Basic Menu 3 button Navigation, with various functions like ADC, LED ON/OFF etc 
+# STM32F103C8T6 Interfacing. LCD1602A. 3 Button Navigation.
+STM32F103C8T6 Interfacing. LCD1602A. 3 Button Navigation.various functions like ADC, LED ON/OFF etc 
