@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include "stm32f10x.h"
-#include "delays.h"
+//#include "delays.h"
 
 ///////////////////////////////////////////////////////////////////
 //Pinnumber address in mode config port
@@ -143,8 +143,8 @@ void LCDSendCharacter(char character)
 		LCDCharacterMode();
 		LCDEnable();
 		LCDByte(character);
-		DelayUs(1);
-		//NotExactDelay(190); //200ns
+		//DelayUs(1);
+		NotExactDelay(170); //200ns 190
 	}
 
 ///////////////////////////////////////////////////////////////////
@@ -154,7 +154,7 @@ void LCDSendCommand(char command)
 		LCDCommandMode();
 		LCDEnable();
 		LCDByte(command);
-		NotExactDelay(190); //200ns
+		NotExactDelay(190); //200ns   
 	}
 	
 ///////////////////////////////////////////////////////////////////	
