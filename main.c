@@ -2,6 +2,7 @@
 #include "LCDFunctions.h"
 #include "delays.h"
 #include "ADCFunction.h"
+#include "DHT11Function.h"
 
 
 //#define navbuttonport GPIOA;
@@ -19,7 +20,7 @@ int Current = 2;
 
 //Menu1 current2 LED ON/OFF
 //Menu2 current3 ADC
-//Menu3 current4 Dummy Menu
+//Menu3 current4 DHT11
 //Menu4 current5 Exit
 //
 
@@ -30,7 +31,6 @@ int main()
 		GPIOA->CRL &= ~(GPIO_CRL_MODE0| GPIO_CRL_MODE1);
 		GPIOA->CRL |= (GPIO_CRL_CNF0_1|GPIO_CRL_CNF1_1|GPIO_CRL_CNF2_1);
 		GPIOA->CRL &= ~(GPIO_CRL_CNF0_0|GPIO_CRL_CNF1_0|GPIO_CRL_CNF2_0);	
-		
 		
 		LCDBegin();
 		LCDSendString("WELCOME");
@@ -86,11 +86,8 @@ int main()
 										LCDSetCursorPosition(0,1);
 										LCDSendString("    NAVIGATE  >>");			
 										DelayMs(300);
-									}
-									
-																			
+									}										
 								}	
-						//DelayMs(500);	
 					}
 			
 				while(i == 3)
@@ -105,7 +102,6 @@ int main()
 					
 						while(i == 3)
 						{
-							//DelayMs(300);
 							if(GPIOA -> IDR & GPIO_IDR_IDR0)
 								{
 									i = i + 1;
@@ -117,12 +113,9 @@ int main()
 									i = i - 1;
 									if(i <= MIN) i = 2;
 								}
-							//DelayMs(500);	
 						
 							if(GPIOA -> IDR & GPIO_IDR_IDR1)
-									{
-										//int temp=0;
-										
+									{										
 										LCDSetCursorPosition(0,0);
 										LCDSendString("ADC ->          ");
 										LCDSetCursorPosition(0,1);
@@ -134,7 +127,6 @@ int main()
 											{
 												ADCResult();
 
-												DelayMs(1000);
 												if(GPIOA -> IDR & GPIO_IDR_IDR2)	
 													{
 														ADC1->CR2 &= ~ADC_CR2_ADON; 
@@ -149,7 +141,6 @@ int main()
 										LCDSendString("<<  NAVIGATE  >>");	
 										DelayMs(300);
 									}	
-						
 						}
 						
 					}		
@@ -160,13 +151,12 @@ int main()
 						DelayMs(300);						
 						//LCDClear();
 						LCDSetCursorPosition(0,0);
-						LCDSendString("Dummy Menu       ");
+						LCDSendString("DHT11->OFF      ");
 						LCDSetCursorPosition(0,1);
 						LCDSendString("<<  NAVIGATE  >>");
 						Current = 4;
 						while(i == 4)
 							{
-								//DelayMs(300);
 								if(GPIOA -> IDR & GPIO_IDR_IDR0)
 									{
 										i = i + 1;
@@ -181,20 +171,29 @@ int main()
 									
 								if(GPIOA -> IDR & GPIO_IDR_IDR1)
 									{
+										LCDSetCursorPosition(0,1);
+										LCDSendString("<<OFF HOLD 3SEC ");
+										while(1)
+										{
+											DHT11run();
+											if(GPIOA -> IDR & GPIO_IDR_IDR2)	
+													{
+														break;
+													}
+										}
 										
-										
-										
+										LCDSetCursorPosition(0,0);
+										LCDSendString("DHT11->OFF      ");
+										LCDSetCursorPosition(0,1);
+										LCDSendString("<<  NAVIGATE  >>");
+										DelayMs(1000);
 									}
-									
-						//DelayMs(500);	
-        
 							}
 						}
 							
         while(i == 5)
 					{
 						DelayMs(300);						
-						//LCDClear();
 						LCDSetCursorPosition(0,0);
 						LCDSendString("EXIT             ");
 						LCDSetCursorPosition(0,1);
